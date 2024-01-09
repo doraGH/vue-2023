@@ -135,8 +135,6 @@
           axios.get(`${apiUrl}/api/${apiPath}/admin/products/all`)
             .then((response) => {
               products.value = response.data.products;
-              // console.log(this.products);
-              // console.log(Object.keys(this.products).length);
             })
             .catch((error) => {
               alert(error.data.message);
