@@ -15,7 +15,7 @@
   <div id="app">
     <div class="container">
       <div class="text-end mt-4">
-        <button type="button" class="btn btn-primary" @click.prevent="openProductModal">
+        <button type="button" class="btn btn-primary" @click.prevent="openProductModal('createNew')">
           建立新的產品
         </button>
       </div>
@@ -52,10 +52,11 @@
             </td>
             <td class="text-center">
               <div class="btn-group">
-                <button type="button" class="btn btn-outline-primary btn-sm">
+                <button type="button" class="btn btn-outline-primary btn-sm" @click="openProductModal('edit', item)">
                   編輯
                 </button>
-                <button type="button" class="btn btn-outline-danger btn-sm">
+                <button type="button" class="btn btn-outline-danger btn-sm"
+                  @click="openProductModal('deleteProduct', item)">
                   刪除
                 </button>
               </div>
@@ -65,6 +66,7 @@
       </table>
     </div>
     <!-- Modal -->
+    <!-- 新增修改視窗 -->
     <div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel"
       aria-hidden="true">
       <div class="modal-dialog modal-xl">
@@ -188,6 +190,7 @@
         </div>
       </div>
     </div>
+    <!-- 刪除彈跳視窗 -->
     <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
       aria-labelledby="delProductModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -242,6 +245,7 @@
             }
           },
           bsProductModal: '',
+          bsDelProductModal: '',
 
 
         }
@@ -270,17 +274,33 @@
               alert(error.data.message);
             })
         },
-        // 更新產品列表
+        // 更新產品列表 ==> 判斷id是否相同存在products
+        // 參考課程：https://courses.hexschool.com/courses/vue-2021211/lectures/49875647
+        // 課程範例：intro/intro_edit_data.html
         updateProduct() {
-          axios.post(`${this.apiUrl}/api/${this.apiPath}/admin/product`, this.tempProduct)
-            .then(response => {
-              this.bsProductModal.hide();
-              // console.log(response);
-              this.getProducts();
-            })
-            .catch(error => {
-              console.log(error);
-            })
+          console.log(this.tempProduct.data.id)
+          // 要傳入的下方物件並沒有id,所以如果這一筆資料沒有id就是新增物件
+          if (!this.tempProduct.data.id) {
+            //console.log(this.tempProduct.data.id)
+            axios.post(`${this.apiUrl}/api/${this.apiPath}/admin/product`, this.tempProduct)
+              .then(response => {
+                this.bsProductModal.hide();
+                this.getProducts();
+              })
+              .catch(error => {
+                alert(error.data.message);
+              })
+          } else {
+            axios.put(`${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.data.id}`, this.tempProduct)
+              .then(response => {
+                this.bsProductModal.hide();
+                this.getProducts();
+              })
+              .catch(error => {
+                alert(error.data.message);
+              })
+          }
+
         },
 
         // 多圖新增-建不出來
@@ -291,15 +311,31 @@
         },
 
 
-        // 開起新增product modal
-        openProductModal() {
-          this.bsProductModal.show();
+        // 開起 bs modal
+        // 從@clik傳值  判斷是哪個視窗 打開彈跳視窗
+        openProductModal(status, item) {
+          if (status === 'createNew') {
+            this.tempProduct.data = {};
+            this.bsProductModal.show();
+            // console.log(status, item);
+          } else if (status === 'edit') {
+            this.tempProduct.data = { ...item };
+            this.bsProductModal.show();
+            // console.log(this.tempProduct.data);
+          } else if (status === 'deleteProduct') {
+            //console.log(status, item);
+            this.tempProduct.data = { ...item };
+            this.bsDelProductModal.show();
+          }
+
         },
 
       },
       mounted() {
         // 建立bs實體化
         this.bsProductModal = new bootstrap.Modal(this.$refs.productModal);
+        this.bsDelProductModal = new bootstrap.Modal(this.$refs.delProductModal);
+
 
         // 取得暫存在cookie 的 token
         const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1",);
