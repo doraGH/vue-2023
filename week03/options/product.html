@@ -44,8 +44,8 @@
           <tr v-for="item in products" :key="item.id">
             <td>{{ item.category }}</td>
             <td>{{ item.title }}</td>
-            <td class="text-end text-center">{{ item.origin_price }}</td>
-            <td class="text-end text-center">{{ item.price }}</td>
+            <td class="text-center">{{ item.origin_price }}</td>
+            <td class="text-center">{{ item.price }}</td>
             <td class="text-center">
               <span class="text-success" v-if="item.is_enabled">啟用</span>
               <span v-else>未啟用</span>
@@ -56,7 +56,7 @@
                   編輯
                 </button>
                 <button type="button" class="btn btn-outline-danger btn-sm"
-                  @click="openProductModal('deleteProduct', item)">
+                  @click="openProductModal('delete', item)">
                   刪除
                 </button>
               </div>
@@ -73,7 +73,8 @@
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
             <h5 id="productModalLabel" class="modal-title">
-              <span>新增產品</span>
+              <span v-if="isNew">新增產品</span>
+              <span v-else>編輯產品</span>
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -84,16 +85,16 @@
                   <div class="mb-3">
                     <label for="imageUrl" class="form-label">輸入圖片網址</label>
                     <input id="imageUrl" type="text" class="form-control" placeholder="請輸入圖片連結"
-                      v-model="tempProduct.data.imagesUrl">
+                      v-model="tempProduct.data.imageUrl">
                   </div>
-                  <img class="img-fluid" :src="tempProduct.data.imagesUrl" alt="">
+                  <img class="img-fluid" :src="tempProduct.data.imageUrl" alt="">
                 </div>
                 <h3 class="mb-3">多圖新增</h3>
-                <div v-if="Array.isArray(tempProduct.imagesUrl)">
+                <div v-if="Array.isArray(tempProduct.data.imagesUrl)">
                   <div class="mb-2" v-for="(image, key) in tempProduct.data.imagesUrl" :key="key">
                     <div class="mb-3">
-                      <label :for=`imagesUrl${key}` class="form-label">輸入圖片網址</label>
-                      <input id=`imagesUrl${key}` type="text" class="form-control" placeholder="請輸入圖片連結"
+                      <label for="imagesUrl" class="form-label">輸入圖片網址</label>
+                      <input type="text" class="form-control" placeholder="請輸入圖片連結"
                         v-model="tempProduct.data.imagesUrl[key]">
                     </div>
                     <img class="img-fluid" :src="image" alt="">
@@ -203,13 +204,13 @@
           </div>
           <div class="modal-body">
             是否刪除
-            <strong class="text-danger"></strong> 商品(刪除後將無法恢復)。
+            <strong class="text-danger">{{tempProduct.data.title}}</strong> 商品(刪除後將無法恢復)。
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
               取消
             </button>
-            <button type="button" class="btn btn-danger">
+            <button type="button" class="btn btn-danger" @click="deleteProduct">
               確認刪除
             </button>
           </div>
@@ -241,38 +242,37 @@
           products: [],
           tempProduct: {
             data: {
-              imagesUrl: []
+              // imagesUrl: []
             }
           },
+          isNew: false,
           bsProductModal: '',
           bsDelProductModal: '',
-
-
         }
       },
       methods: {
         // 確認是否登入狀態
         checkLogin() {
           axios.post(`${this.apiUrl}/api/user/check`)
-            .then(response => {
-              console.log('登入成功');
-              this.getProducts();
-            })
-            .catch(error => {
-              alert(error.data.message);
-              window.location = 'login.html';
-            })
+          .then(response => {
+            // console.log('登入成功');
+            this.getProducts();
+          })
+          .catch(error => {
+            alert(error.data.message);
+            window.location = 'login.html';
+          })
         },
         // 取得後台產品列表
         getProducts() {
           axios.get(`${this.apiUrl}/api/${this.apiPath}/admin/products/all`)
-            .then(response => {
-              console.log(response);
-              this.products = response.data.products;
-            })
-            .catch(error => {
-              alert(error.data.message);
-            })
+          .then(response => {
+            // console.log(response);
+            this.products = response.data.products;
+          })
+          .catch(error => {
+            alert(error.data.message);
+          })
         },
         // 更新產品列表 ==> 判斷id是否相同存在products
         // 參考課程：https://courses.hexschool.com/courses/vue-2021211/lectures/49875647
@@ -283,32 +283,46 @@
           if (!this.tempProduct.data.id) {
             //console.log(this.tempProduct.data.id)
             axios.post(`${this.apiUrl}/api/${this.apiPath}/admin/product`, this.tempProduct)
-              .then(response => {
-                this.bsProductModal.hide();
-                this.getProducts();
-              })
-              .catch(error => {
-                alert(error.data.message);
-              })
+            .then(response => {
+              this.bsProductModal.hide();
+              this.getProducts();
+            })
+            .catch(error => {
+              alert(error.data.message);
+            })
           } else {
             axios.put(`${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.data.id}`, this.tempProduct)
-              .then(response => {
-                this.bsProductModal.hide();
-                this.getProducts();
-              })
-              .catch(error => {
-                alert(error.data.message);
-              })
+            .then(response => {
+              this.bsProductModal.hide();
+              this.getProducts();
+            })
+            .catch(error => {
+              alert(error.data.message);
+            })
           }
 
         },
 
-        // 多圖新增-建不出來
+        // 多圖新增
         createImages() {
-          console.log(this.tempProduct.data.imagesUrl);
+          // console.log(this.tempProduct.data.imagesUrl);
           this.tempProduct.data.imagesUrl = [];
           this.tempProduct.data.imagesUrl.push('');
         },
+
+        // 刪除單一產品
+        deleteProduct() {
+          console.log(this.tempProduct.data.id);
+          axios.delete(`${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.data.id}`)
+          .then(response => {
+            this.bsDelProductModal.hide();
+            this.getProducts();
+          })
+          .catch(error => {
+            alert(error.data.message);
+          })
+        },
+
 
 
         // 開起 bs modal
@@ -316,13 +330,15 @@
         openProductModal(status, item) {
           if (status === 'createNew') {
             this.tempProduct.data = {};
+            this.isNew = true;
             this.bsProductModal.show();
             // console.log(status, item);
           } else if (status === 'edit') {
             this.tempProduct.data = { ...item };
+            this.isNew = false;
             this.bsProductModal.show();
             // console.log(this.tempProduct.data);
-          } else if (status === 'deleteProduct') {
+          } else if (status === 'delete') {
             //console.log(status, item);
             this.tempProduct.data = { ...item };
             this.bsDelProductModal.show();
