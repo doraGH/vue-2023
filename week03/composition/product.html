@@ -231,133 +231,137 @@
 
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script type="module">
-    const { createApp } = Vue;
+    const { createApp, ref, onMounted } = Vue;
 
     const app = createApp({
-      data() {
-        return {
-          apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-          apiPath: 'dorayu',
-          products: [],
-          tempProduct: {
-            data: {}
-          },
-          isNew: false,
-          bsProductModal: null,
-          bsDelProductModal: null,
-        }
-      },
+      setup() {
+        // data
+        const apiUrl = 'https://vue3-course-api.hexschool.io/v2';
+        const apiPath = 'dorayu';
+        const products = ref([]);
+        const tempProduct = ref({ data: {} });
+        const isNew = ref(false);
+        const bsProductModal = ref(null);
+        const bsDelProductModal = ref(null);
 
-      mounted() {
-        // 建立bs實體化
-        this.bsProductModal = new bootstrap.Modal(this.$refs.productModal, {
-          keyboard: false,
-          backdrop: 'static'
+        // 取得 dom元素,這裡需要使用document.getElementById
+        // https://chat.openai.com/share/e9c57ec8-b66b-44db-b5cb-525d32595a4b
+        // mounted
+        onMounted(() => {
+          // 建立bs實體化
+          bsProductModal.value = new bootstrap.Modal(document.getElementById('productModal'));
+          bsDelProductModal.value = new bootstrap.Modal(document.getElementById('delProductModal'));
+
+          // 取得暫存在cookie 的 token
+          const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1",);
+          axios.defaults.headers.common['Authorization'] = token;
+          // 檢查是否登入
+          checkLogin();
         });
-        this.bsDelProductModal = new bootstrap.Modal(this.$refs.delProductModal, {
-          keyboard: false,
-          backdrop: 'static'
-        });
 
-        // 取得暫存在cookie 的 token
-        const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1",);
-        axios.defaults.headers.common['Authorization'] = token;
-        // 檢查是否登入
-        this.checkLogin();
-      },
-
-      methods: {
-        // 從@clik傳值  判斷是哪個視窗 打開彈跳視窗
-        openProductModal(status, item) {
-          if (status === 'createNew') {
-            this.tempProduct.data = {};
-            this.isNew = true;
-            this.bsProductModal.show();
-          } else if (status === 'edit') {
-            this.tempProduct.data = { ...item };
-            this.isNew = false;
-            this.bsProductModal.show();
-          } else if (status === 'delete') {
-            this.tempProduct.data = { ...item };
-            this.bsDelProductModal.show();
-          }
-        },
-
+        // methods
         // 確認是否登入狀態
-        checkLogin() {
-          axios.post(`${this.apiUrl}/api/user/check`)
+        const checkLogin = () => {
+          axios.post(`${apiUrl}/api/user/check`)
             .then(response => {
-              this.getProducts();
+              getProducts();
             })
             .catch(error => {
               alert(error.data.message);
               window.location = 'login.html';
             })
-        },
+        };
+
+        // 開起 bs modal
+        const openProductModal = (status, item) => {
+          if (status === 'createNew') {
+            tempProduct.value.data = {};
+            isNew.value = true;
+            bsProductModal.value.show();
+          } else if (status === 'edit') {
+            tempProduct.value.data = { ...item };
+            isNew.value = false;
+            bsProductModal.value.show();
+          } else if (status === 'delete') {
+            tempProduct.value.data = { ...item };
+            bsDelProductModal.value.show();
+          }
+        };
+
         // 取得後台產品列表
-        getProducts() {
-          axios.get(`${this.apiUrl}/api/${this.apiPath}/admin/products/all`)
+        const getProducts = () => {
+          axios.get(`${apiUrl}/api/${apiPath}/admin/products/all`)
             .then(response => {
-              this.products = response.data.products;
+              products.value = response.data.products;
             })
             .catch(error => {
               alert(error.data.message);
             })
-        },
+        };
 
         // 更新產品
-        updateProduct() {
-          console.log(this.tempProduct.data.id)
-          // 要傳入的下方物件並沒有id,所以如果這一筆資料沒有id就是新增物件
-          // let url = `${this.apiUrl}/api/${this.apiPath}/admin/product`;
-          // let http = "post";
-
-          if (!this.tempProduct.data.id) {
-            axios.post(`${this.apiUrl}/api/${this.apiPath}/admin/product`, this.tempProduct)
+        const updateProduct = () => {
+          if (!tempProduct.value.data.id) {
+            axios.post(`${apiUrl}/api/${apiPath}/admin/product`, tempProduct.value)
               .then(response => {
-                this.bsProductModal.hide();
-                this.getProducts();
+                bsProductModal.value.hide();
+                getProducts();
               })
               .catch(error => {
                 alert(error.data.message);
               })
           } else {
-            axios.put(`${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.data.id}`, this.tempProduct)
+            axios.put(`${apiUrl}/api/${apiPath}/admin/product/${tempProduct.value.data.id}`, tempProduct.value)
               .then(response => {
-                this.bsProductModal.hide();
-                this.getProducts();
+                bsProductModal.value.hide();
+                getProducts();
               })
               .catch(error => {
                 alert(error.data.message);
               })
           }
-
-
-        },
+        };
 
         // 多圖新增
-        createImages() {
-          // console.log(this.tempProduct.data.imagesUrl);
-          this.tempProduct.data.imagesUrl = [];
-          this.tempProduct.data.imagesUrl.push('');
-        },
+        const createImages = () => {
+          tempProduct.value.data.imagesUrl = [];
+          tempProduct.value.data.imagesUrl.push('');
+        };
 
         // 刪除單一產品
-        deleteProduct() {
-          // console.log(this.tempProduct.data.id);
-          axios.delete(`${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.data.id}`)
+        const deleteProduct = () => {
+          axios.delete(`${apiUrl}/api/${apiPath}/admin/product/${tempProduct.value.data.id}`)
             .then(response => {
-              this.bsDelProductModal.hide();
-              this.getProducts();
+              bsDelProductModal.value.hide();
+              getProducts();
             })
             .catch(error => {
               alert(error.data.message);
             })
-        },
-      },
+        };
+
+        // return
+        return {
+          products,
+          tempProduct,
+          isNew,
+          bsProductModal,
+          bsDelProductModal,
+          openProductModal,
+          checkLogin,
+          getProducts,
+          updateProduct,
+          createImages,
+          deleteProduct,
+        }
+      }
+
+
     });
     app.mount('#app');
+
   </script>
+
 </body>
 
 </html>

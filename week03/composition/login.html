@@ -53,20 +53,18 @@
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script type="module">
-    const { createApp } = Vue;
+    const { createApp, ref } = Vue;
     const app = createApp({
-      data() {
-        return {
-          apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-          user: {
-            username: "",
-            password: ""
-          }
-        }
-      },
-      methods: {
-        login() {
-          axios.post(`${this.apiUrl}/admin/signin`, this.user)
+      setup() {
+        const apiUrl = 'https://vue3-course-api.hexschool.io/v2';
+        const user = ref({
+          username: "",
+          password: ""
+        });
+
+        // methods
+        const login = () => {
+          axios.post(`${apiUrl}/admin/signin`, user.value)
             .then((response) => {
               const { token, expired } = response.data;
               document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
@@ -75,8 +73,13 @@
             .catch((error) => {
               alert(error.data.message);
             });
-        }
-      },
+        };
+
+        return {
+          user,
+          login
+        };
+      }
     });
 
     app.mount('#app');
