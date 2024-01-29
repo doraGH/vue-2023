@@ -31,17 +31,15 @@ export default {
     return {
       apiUrl: "https://vue3-course-api.hexschool.io/v2",
       apiPath: "dorayu",
+      bsDelProductModal: null,
     };
   },
   mounted() {
-    // 向外訪問實體
-    this.$emit("delete-modal", this.$refs.delProductModal);
-
     // bs modal 實體化
-    // bsDelProductModal = new bootstrap.Modal(this.$refs.delProductModal, {
-    //   backdrop: "static",
-    //   keyboard: false,
-    // });
+    this.bsDelProductModal = new bootstrap.Modal(this.$refs.delProductModal, {
+      backdrop: "static",
+      keyboard: false,
+    });
   },
   methods: {
     // 刪除單一產品
@@ -52,15 +50,16 @@ export default {
         )
         .then((response) => {
           Swal.fire(response.data.message);
-          // bsDelProductModal.hide();
-          // this.hideModal();
-
-          this.$emit("hide-delete-modal");
+          this.bsDelProductModal.hide();
           this.$emit("updateProduct");
         })
         .catch((error) => {
           Swal.fire(error.data.message);
         });
+    },
+    // 打開modal
+    openModal(){
+      this.bsDelProductModal.show();
     },
   },
 };

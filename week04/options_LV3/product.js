@@ -2,8 +2,7 @@ const { createApp } = Vue;
 import pagination from "./components/pagination.js";
 import productModal from "./components/product-modal.js";
 import delProductModal from "./components/del-product-modal.js";
-let bsProductModal = null;
-let bsDelProductModal = null;
+
 
 const app = createApp({
   data() {
@@ -65,14 +64,16 @@ const app = createApp({
       if (status === "createNew") {
         this.isNew = true;
         this.tempProduct.data = {};
-        bsProductModal.show();
+        // bsProductModal.show();
+        this.openProductModalShow();
       } else if (status === "edit") {
         this.isNew = false;
         this.tempProduct.data = { ...item };
-        bsProductModal.show();
+        // bsProductModal.show();
+        this.openProductModalShow();
       } else if (status === "delete") {
         this.tempProduct.data = { ...item };
-        bsDelProductModal.show();
+        this.openDelProductModalShow();
       }
     },
 
@@ -84,30 +85,12 @@ const app = createApp({
       };
     },
 
-    // 接收productModal事件
-    handleProductModal(modalInstance) {
-      // 建立bs實體化
-      bsProductModal = new bootstrap.Modal(modalInstance, {
-        keyboard: false,
-        backdrop: "static",
-      });
+    // bsModal show
+    openProductModalShow(){
+      this.$refs.productModal.openModal();
     },
-    // 隱藏product modal
-    hideProductModal() {
-      bsProductModal.hide();
-    },
-
-    // 接收deleteModal事件
-    handleDeleteModal(modalInstance) {
-      // 建立bs實體化
-      bsDelProductModal = new bootstrap.Modal(modalInstance, {
-        keyboard: false,
-        backdrop: "static",
-      });
-    },
-    // 隱藏del modal
-    hideDeleteModal() {
-      bsDelProductModal.hide();
+    openDelProductModalShow(){
+      this.$refs.delProductModal.openModal();
     },
 
     // 登出

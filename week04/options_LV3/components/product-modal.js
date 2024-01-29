@@ -127,19 +127,15 @@ export default {
     return {
       apiUrl: "https://vue3-course-api.hexschool.io/v2",
       apiPath: "dorayu",
+      bsProductModal: null,
     };
   },
   mounted() {
-    // 向外訪問實體
-    this.$emit("product-modal", this.$refs.productModal);
-
     // bs modal 實體化
-    // document.getElementById('productModal')
-
-    // bsProductModal = new bootstrap.Modal(this.$refs.productModal, {
-    //   backdrop: "static",
-    //   keyboard: false,
-    // });
+    this.bsProductModal = new bootstrap.Modal(this.$refs.productModal, {
+      backdrop: "static",
+      keyboard: false,
+    });
   },
   methods: {
     // 多圖區-新增產品
@@ -161,9 +157,7 @@ export default {
       axios[http](url, this.tempProduct)
         .then((response) => {
           Swal.fire(response.data.message);
-          // bsProductModal.hide();
-          //this.getPorducts();
-          this.$emit("hide-product-modal");
+          this.bsProductModal.hide();
           this.$emit("updateProduct");
         })
         .catch((error) => {
@@ -192,5 +186,11 @@ export default {
           Swal.fire(error.data.message.message);
         });
     },
+
+    // 打開modal
+    openModal(){
+      this.bsProductModal.show();
+    },
+
   },
 };

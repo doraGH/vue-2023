@@ -15,7 +15,9 @@
   <div id="app">
     <div class="container">
       <div class="text-end mt-4">
-        <button class="btn btn-primary" @click="openProductModal('createNew')">
+        <button class="btn btn-primary" 
+        @click="openProductModal('createNew')" 
+        @click="openProductModalShow">
           建立新的產品
         </button>
         <button type="button" class="btn btn-outline-primary m-2" @click="logout">
@@ -72,13 +74,15 @@
     </div>
 
     <!-- Modal 新增修改視窗 -->
-    <product-modal ref="productModal" :is-new="isNew" :temp-product="tempProduct" @update-product="getPorducts"
-      @update-temp-product="handleUpdateTempProduct" @product-modal="handleProductModal"
-      @hide-product-modal="hideProductModal"></product-modal>
+    <product-modal ref="productModal" :is-new="isNew" :temp-product="tempProduct" 
+    @update-product="getPorducts"
+    @update-temp-product="handleUpdateTempProduct"
+    ></product-modal>
 
     <!-- Modal 刪除彈跳視窗 -->
-    <del-product-modal ref="delProductModal" :temp-product="tempProduct" @update-product="getPorducts"
-      @hide-delete-modal="hideDeleteModal" @delete-modal="handleDeleteModal"></del-product-modal>
+    <del-product-modal ref="delProductModal" :temp-product="tempProduct" 
+    @update-product="getPorducts"
+    ></del-product-modal>
   </div>
 
 
