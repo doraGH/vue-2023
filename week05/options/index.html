@@ -11,37 +11,20 @@
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css'
     integrity='sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=='
     crossorigin='anonymous' />
+  <style>
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+  </style>
 </head>
 
 <body>
   <div id="app">
     <div class="container">
       <div class="mt-4">
-        <!-- 產品Modal card-->
-        <div class="row row-cols-4 my-4 g-4">
-          <div class="col">
-            <div class="card">
-              <img src="./images/travel_4.png" class="card-img-top" alt="圖片">
-              <div class="card-body">
-                <h5 class="card-title">{{ 標題 }}</h5>
-                <p class="card-text">
-                  <del class="h6">原價 {{1000 }} 元</del> /
-                  <span class="h5">現在只要 {{ 900}} 元</span>
-                </p>
-                <div class="btn-group btn-group-sm d-flex">
-                  <button type="button" class="btn btn-outline-secondary">
-                    <!-- <i class="fas fa-spinner fa-pulse"></i> -->
-                    查看更多
-                  </button>
-                  <button type="button" class="btn btn-outline-danger">
-                    <!-- <i class="fas fa-spinner fa-pulse"></i> -->
-                    加到購物車
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- 產品列表 card-->
+        <product-component :products="products"></product-component>
 
 
         <!-- 購物車列表 -->
@@ -226,9 +209,16 @@
     integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <!-- VueDemi，使用 Pinia 必要的相依套件 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-demi/0.13.11/index.iife.js"></script>
+  <script>const I = VueDemi; const vueDemi = VueDemi;</script>
+  <!-- Pinia 網頁版，實戰中還是以 npm 為主，這是比較少見的使用方式 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pinia/2.0.22/pinia.iife.js"></script>
+  <!-- 驗證表單 -->
   <script src="https://unpkg.com/vee-validate@next"></script>
   <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script>
   <script src="https://unpkg.com/@vee-validate/rules"></script>
+
   <script src="./main.js" type="module"></script>
 </body>
 
