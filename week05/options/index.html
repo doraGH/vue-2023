@@ -13,8 +13,14 @@
     crossorigin='anonymous' />
   <style>
     .card-img-top {
-      height: 200px;
+      height: 120px;
       object-fit: cover;
+    }
+    .card-text {
+      font-size: 13px;
+      del {
+        color: #999;
+      }
     }
   </style>
 </head>
@@ -23,8 +29,14 @@
   <div id="app">
     <div class="container">
       <div class="mt-4">
+        <!-- 產品Modal -->
+        <modal-component ref="modal" :temp-product="tempProduct"></modal-component>
+      
+        <!-- 產品Modal -->
+
+
         <!-- 產品列表 card-->
-        <product-component :products="products"></product-component>
+        <product-component :products="products" @get-product="getProduct"></product-component>
 
 
         <!-- 購物車列表 -->
@@ -52,7 +64,7 @@
                   </button>
                 </td>
                 <td>
-                  {{ 標題 }}
+                  {{  }}
                   <div class="text-success">
                     已套用優惠券
                   </div>
@@ -61,13 +73,13 @@
                   <div class="input-group input-group-sm">
                     <div class="input-group mb-3">
                       <input min="1" type="number" class="form-control">
-                      <span class="input-group-text" id="basic-addon2">{{ 單位 }}</span>
+                      <span class="input-group-text" id="basic-addon2">{{  }}</span>
                     </div>
                   </div>
                 </td>
                 <td class="text-end">
                   <small class="text-success">折扣價：</small>
-                  {{ 123}}
+                  {{ }}
                 </td>
               </tr>
               <!-- </template> -->
@@ -75,11 +87,11 @@
             <tfoot>
               <tr>
                 <td colspan="3" class="text-end">總計</td>
-                <td class="text-end">{{ 900 }}</td>
+                <td class="text-end">{{  }}</td>
               </tr>
               <tr>
                 <td colspan="3" class="text-end text-success">折扣價</td>
-                <td class="text-end text-success">{{ 500 }}</td>
+                <td class="text-end text-success">{{  }}</td>
               </tr>
             </tfoot>
           </table>
@@ -158,46 +170,9 @@
     </div>
   </div>
 
-  <!-- 查看詳細 - 彈出視窗 -->
-  <script type="text/x-template" id="userProductModal">
-    <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
-      <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content border-0">
-          <div class="modal-header bg-dark text-white">
-            <h5 class="modal-title" id="exampleModalLabel">
-              <span>{{  }}</span>
-            </h5>
-            <button type="button" class="btn-close"
-                    data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-sm-6">
-                <img class="img-fluid" :src="..." alt="">
-              </div>
-              <div class="col-sm-6">
-                <span class="badge bg-primary rounded-pill">{{  }}</span>
-                <p>商品描述：{{  }}</p>
-                <p>商品內容：{{  }}</p>
-                <div class="h5">{{  }} 元</div>
-                <del class="h6">原價 {{ }} 元</del>
-                <div class="h5">現在只要 {{  }} 元</div>
-                <div>
-                  <div class="input-group">
-                    <input type="number" class="form-control"
-                          min="1">
-                    <button type="button" class="btn btn-primary">加入購物車</button>
-                  </div>
-                </div>
-              </div>
-              <!-- col-sm-6 end -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </script>
+  
+
+
 
   <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js'
     integrity='sha512-Xk3wWei2TGrsh9kDSBKUMIjw/86sLUvhtnv9f7fOuIwhhiUTKz8szkWkzHthrM5Bb3Bu9idSzkxOrkzhcneuiw=='
@@ -209,11 +184,13 @@
     integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc"
     crossorigin="anonymous"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
   <!-- VueDemi，使用 Pinia 必要的相依套件 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-demi/0.13.11/index.iife.js"></script>
   <script>const I = VueDemi; const vueDemi = VueDemi;</script>
   <!-- Pinia 網頁版，實戰中還是以 npm 為主，這是比較少見的使用方式 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pinia/2.0.22/pinia.iife.js"></script>
+
   <!-- 驗證表單 -->
   <script src="https://unpkg.com/vee-validate@next"></script>
   <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script>

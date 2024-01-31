@@ -1,23 +1,14 @@
-import productComponent from "./components/productComponent.js";
-import modalComponent from "./components/modalComponent.js";
-
 const { createApp } = Vue;
-
 
 const apiUrl = 'https://vue3-course-api.hexschool.io/v2';
 const apiPath = 'dorayu';
 
-
-const app = createApp({
+const app = createApp({  
   data() {
     return {
       products: [],
       tempProduct: {},
     }
-  },
-  components: {
-    productComponent,
-    modalComponent
   },
   methods: {
     // 取得所有產品
@@ -32,6 +23,7 @@ const app = createApp({
         alert(error.data.message);
       })
     },
+
     // 取得單一產品
     getProduct(id) {
       const url = `${apiUrl}/api/${apiPath}/product/${id}`;
@@ -40,18 +32,40 @@ const app = createApp({
         const { product } = response.data;
         this.tempProduct = product;
         this.$refs.modal.openModal();
+        
       })
       .catch((error) => {
         alert(error.data.message);
       })
     },
-    
   },
   mounted(){
     this.getProducts();
   },
 });
 
-
-
+app.component('userProductModal', {
+  template: '#userProductModal',
+  props: ['tempProduct'],
+  data(){
+    return {
+      bsModal: null,
+    }
+  },
+  mounted() {
+    this.bsModal = new bootstrap.Modal(this.$refs.modal, {
+      backdrop: 'static',
+      keyboard: false
+    });
+  },
+  methods: {
+    openModal(){//打開modal
+      this.bsModal.show();
+    },
+    hideModal(){//關掉modal
+      this.bsModal.hide();
+    }
+  },
+  
+});
 app.mount("#app");
