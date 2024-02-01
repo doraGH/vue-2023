@@ -31,8 +31,7 @@ const app = createApp({
         // console.log(response);
         const { product } = response.data;
         this.tempProduct = product;
-        this.$refs.modal.openModal();
-        
+        this.$refs.modal.openModal();        
       })
       .catch((error) => {
         alert(error.data.message);

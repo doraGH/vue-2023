@@ -1,5 +1,5 @@
-import 'https://unpkg.com/mitt/dist/mitt.umd.js'; // mitt
-const emitter = mitt(); // 宣告一個變數指向mitt(); 即可啟用mitt
+// import 'https://unpkg.com/mitt/dist/mitt.umd.js'; // mitt
+// const emitter = mitt(); // 宣告一個變數指向mitt(); 即可啟用mitt
 
 export default {  
   template: `
@@ -18,7 +18,7 @@ export default {
               <!-- <i class="fas fa-spinner fa-pulse"></i> -->
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger">
+            <button type="button" class="btn btn-outline-danger" @click.prevent="addCart(item.id)">
               <!-- <i class="fas fa-spinner fa-pulse"></i> -->
               加到購物車
             </button>
@@ -30,9 +30,13 @@ export default {
   `,
   props: ['products'],
   methods: {
-    // 點擊開起modal
-    getProduct(item){
-      this.$emit('getProduct', item);
+    // 點擊呼叫單一產品 api
+    getProduct(productId){
+      this.$emit('getProduct', productId);
     },
+    // 呼叫外部加入購物車 api
+    addCart(productId) {
+      this.$emit('addCart', productId);
+    }
   }
 }

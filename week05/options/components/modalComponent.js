@@ -25,8 +25,8 @@ export default {
                 <div>
                   <div class="input-group">
                     <input type="number" class="form-control"
-                          min="1">
-                    <button type="button" class="btn btn-primary" @click="addCart">加入購物車</button>
+                          min="1" v-model.number="qty">
+                    <button type="button" class="btn btn-primary" @click="addCart(tempProduct.id, qty)">加入購物車</button>
                   </div>
                 </div>
               </div>
@@ -41,6 +41,7 @@ export default {
   data() {
     return {
       bsModal: null,
+      qty: 1,
     }
   },
   mounted() {
@@ -51,10 +52,15 @@ export default {
   },
   methods: {
     openModal(){//打開modal
+      this.qty = 1; // 重新設定 qty 為 1
       this.bsModal.show();
     },
     hideModal(){//關掉modal
       this.bsModal.hide();
+    },
+    // 呼叫外部加入購物車 api
+    addCart(productId, num) {
+      this.$emit('addCart', productId, num);
     }
   },
 }

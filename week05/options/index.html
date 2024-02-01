@@ -22,6 +22,11 @@
         color: #999;
       }
     }
+    .img-cart {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+    }
   </style>
 </head>
 
@@ -30,41 +35,46 @@
     <div class="container">
       <div class="mt-4">
         <!-- 產品Modal -->
-        <modal-component ref="modal" :temp-product="tempProduct"></modal-component>
-      
+        <modal-component ref="modal" :temp-product="tempProduct" 
+        @add-cart="addCart"></modal-component>      
         <!-- 產品Modal -->
 
 
         <!-- 產品列表 card-->
-        <product-component :products="products" @get-product="getProduct"></product-component>
+        <product-component :products="products" 
+        @get-product="getProduct"
+        @add-cart="addCart"
+        ></product-component>
 
 
-        <!-- 購物車列表 -->
+        <!-- 購物車列表 -->       
+
         <div class="text-end">
-          <button class="btn btn-outline-danger" type="button">清空購物車</button>
-        </div>
-        <div class="bg-light my-4 p-4">
-          <!-- <div v-if="!cartList.newCarts.length">購物車沒有任何品項</div> -->
+          <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts">清空購物車</button>
+        </div>        
+        <div v-if="cartList.carts && cartList.carts.length > 0" class="bg-light my-4 p-4">          
           <table class="table align-middle">
             <thead>
               <tr>
                 <th></th>
+                <th>圖片</th>
                 <th>品名</th>
                 <th style="width: 150px">數量/單位</th>
                 <th class="text-end">單價</th>
               </tr>
             </thead>
             <tbody>
-              <!-- <template v-if="cart.carts"> -->
-              <tr>
+              <tr v-for="item in cartList.carts" :key="item.id">
                 <td>
+                  {{item}}
                   <button type="button" class="btn btn-outline-danger btn-sm">
                     <!-- <i class="fas fa-spinner fa-pulse"></i> -->
                     x
                   </button>
                 </td>
+                <td><img class="img-cart" :src="item.product.imageUrl" alt=""></td>
                 <td>
-                  {{  }}
+                  {{ item.product.title }}
                   <div class="text-success">
                     已套用優惠券
                   </div>
@@ -72,30 +82,34 @@
                 <td>
                   <div class="input-group input-group-sm">
                     <div class="input-group mb-3">
-                      <input min="1" type="number" class="form-control">
-                      <span class="input-group-text" id="basic-addon2">{{  }}</span>
+                      <input min="1" type="number" class="form-control" 
+                      v-model.number="item.qty"
+                      @blur="updateCart(item)"
+                      >
+                      <span class="input-group-text" id="basic-addon2">{{ item.product.unit }}</span>
                     </div>
                   </div>
                 </td>
                 <td class="text-end">
                   <small class="text-success">折扣價：</small>
-                  {{ }}
+                  {{ item.final_total }}
                 </td>
               </tr>
-              <!-- </template> -->
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3" class="text-end">總計</td>
-                <td class="text-end">{{  }}</td>
+                <td colspan="4" class="text-end">總計</td>
+                <td class="text-end">{{ cartList.total }}</td>
               </tr>
               <tr>
-                <td colspan="3" class="text-end text-success">折扣價</td>
-                <td class="text-end text-success">{{  }}</td>
+                <td colspan="4" class="text-end text-success">折扣價</td>
+                <td class="text-end text-success">{{ cartList.final_total }}</td>
               </tr>
             </tfoot>
           </table>
         </div>
+        <div v-else class="bg-light my-4 p-4">購物車沒有任何品項</div>
+
       </div>
       <!-- 表單 -->
       <div class="my-5 row justify-content-center">
@@ -168,9 +182,7 @@
         </v-form> -->
       </div>
     </div>
-  </div>
-
-  
+  </div> 
 
 
 
