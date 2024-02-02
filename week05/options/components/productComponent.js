@@ -1,7 +1,7 @@
-// import 'https://unpkg.com/mitt/dist/mitt.umd.js'; // mitt
-// const emitter = mitt(); // 宣告一個變數指向mitt(); 即可啟用mitt
+// import ProductStore from "../stores/ProductStore.js";
+// const { mapState } = Pinia;
 
-export default {  
+export default {
   template: `
   <div class="row row-cols-6 my-4 g-4">
     <div class="col" v-for="item in products" :key="item.id">
@@ -28,15 +28,18 @@ export default {
     </div>
   </div>
   `,
-  props: ['products'],
+  props: ["products"],
   methods: {
     // 點擊呼叫單一產品 api
-    getProduct(productId){
-      this.$emit('getProduct', productId);
+    getProduct(productId) {
+      this.$emit("getProduct", productId);
     },
     // 呼叫外部加入購物車 api
     addCart(productId) {
-      this.$emit('addCart', productId);
-    }
-  }
-}
+      this.$emit("addCart", productId);
+    },
+  },
+  // computed: {
+  //   ...mapState(ProductStore, ["getProductList"]),
+  // },
+};

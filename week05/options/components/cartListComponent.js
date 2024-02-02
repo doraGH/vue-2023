@@ -1,9 +1,9 @@
 export default {
   template: `
   <div class="text-end">
-    <button class="btn btn-outline-danger" type="button" @click="removeAllCarts">清空購物車</button>
-  </div>        
-  <div v-if="cartList.carts && cartList.carts.length > 0" class="bg-light my-4 p-4">          
+    <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts">清空購物車</button>
+  </div>
+  <div v-if="cartList.carts && cartList.carts.length > 0" class="bg-light my-4 p-4">
     <table class="table align-middle">
       <thead>
         <tr>
@@ -15,9 +15,10 @@ export default {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in carts" :key="item.id">
+        <tr v-for="item in cartList.carts" :key="item.id">
           <td>
-            <button type="button" class="btn btn-outline-danger btn-sm">
+            {{item}}
+            <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.id)">
               <!-- <i class="fas fa-spinner fa-pulse"></i> -->
               x
             </button>
@@ -32,35 +33,42 @@ export default {
           <td>
             <div class="input-group input-group-sm">
               <div class="input-group mb-3">
-                <input min="1" type="number" class="form-control" :value="item.product.num">
+                <input min="1" type="number" class="form-control" v-model.number="item.qty"
+                  @blur="updateCart(item)">
                 <span class="input-group-text" id="basic-addon2">{{ item.product.unit }}</span>
               </div>
             </div>
           </td>
           <td class="text-end">
             <small class="text-success">折扣價：</small>
-            {{ item.product.price * item.product.num }}
+            {{ item.final_total }}
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td colspan="4" class="text-end">總計</td>
-          <td class="text-end">{{  }}</td>
+          <td class="text-end">{{ cartList.total }}</td>
         </tr>
         <tr>
           <td colspan="4" class="text-end text-success">折扣價</td>
-          <td class="text-end text-success">{{  }}</td>
+          <td class="text-end text-success">{{ cartList.final_total }}</td>
         </tr>
       </tfoot>
     </table>
   </div>
   <div v-else class="bg-light my-4 p-4">購物車沒有任何品項</div>
   `,
-  props: ['carts'],
+  props: ["cartList"],
   methods: {
-    removeAllCarts() {
-      this.$emit('removeAllCarts');
-    }
+    deleteAllCarts() {
+      this.$emit("deleteAllCarts");
+    },
+    removeCartItem(cartId) {
+      this.$emit("removeCartItem", cartId);
+    },
+    updateCart(item) {
+      this.$emit("updateCart", item);
+    },
   },
-}
+};
