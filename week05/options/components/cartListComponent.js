@@ -16,10 +16,9 @@ export default {
       </thead>
       <tbody>
         <tr v-for="item in cartList.carts" :key="item.id">
-          <td>
-            {{item}}
+          <td>            
             <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.id)">
-              <!-- <i class="fas fa-spinner fa-pulse"></i> -->
+              <i class="fas fa-spinner fa-pulse" v-if="status.isChange"></i>
               x
             </button>
           </td>
@@ -59,7 +58,8 @@ export default {
   </div>
   <div v-else class="bg-light my-4 p-4">購物車沒有任何品項</div>
   `,
-  props: ["cartList"],
+  props: ["cartList", "status"],
+  emits: ["deleteAllCarts", "removeCartItem", "updateCart"],
   methods: {
     deleteAllCarts() {
       this.$emit("deleteAllCarts");

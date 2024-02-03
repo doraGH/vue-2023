@@ -37,30 +37,32 @@ export default {
       </div>
     </div>
   `,
-  props: ['tempProduct'],
+  props: ["tempProduct"],
   data() {
     return {
       bsModal: null,
       qty: 1,
-    }
+    };
   },
   mounted() {
     this.bsModal = new bootstrap.Modal(this.$refs.modal, {
-      backdrop: 'static',
-      keyboard: false
+      backdrop: "static",
+      keyboard: false,
     });
   },
   methods: {
-    openModal(){//打開modal
+    openModal() {
+      //打開modal
       this.qty = 1; // 重新設定 qty 為 1
       this.bsModal.show();
     },
-    hideModal(){//關掉modal
+    hideModal() {
+      //關掉modal
       this.bsModal.hide();
     },
     // 呼叫外部加入購物車 api
     addCart(productId, num) {
-      this.$emit('addCart', productId, num);
-    }
+      this.$emit("addCart", productId, num);
+    },
   },
-}
+};

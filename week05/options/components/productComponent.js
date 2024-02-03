@@ -15,11 +15,11 @@ export default {
           </p>
           <div class="btn-group btn-group-sm d-flex">
             <button type="button" class="btn btn-outline-secondary" @click.prevent="getProduct(item.id)">
-              <!-- <i class="fas fa-spinner fa-pulse"></i> -->
+              <i class="fas fa-spinner fa-pulse" v-if="status.loadItem"></i>
               查看更多
             </button>
             <button type="button" class="btn btn-outline-danger" @click.prevent="addCart(item.id)">
-              <!-- <i class="fas fa-spinner fa-pulse"></i> -->
+              <i class="fas fa-spinner fa-pulse" v-if="status.loadCart"></i>
               加到購物車
             </button>
           </div>
@@ -28,7 +28,7 @@ export default {
     </div>
   </div>
   `,
-  props: ["products"],
+  props: ["products", "status"],
   methods: {
     // 點擊呼叫單一產品 api
     getProduct(productId) {
