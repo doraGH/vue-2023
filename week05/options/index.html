@@ -51,7 +51,7 @@
           <!-- 產品Modal -->
           <modal-component
             ref="modal"
-            :temp-product="tempProduct"
+            :product-item="productItem"
             @add-cart="addCart"
           ></modal-component>
 
@@ -59,7 +59,7 @@
           <product-component
             :products="products"
             :status="status"
-            @get-product="getProduct"
+            @get-product-item="getProductItem"
             @add-cart="addCart"
           ></product-component>
 
@@ -156,7 +156,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vee-validate/4.12.4/vee-validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@vee-validate/rules@4.12.4/dist/vee-validate-rules.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@vee-validate/i18n@4.12.4/dist/vee-validate-i18n.min.js"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="./main.js" type="module"></script>

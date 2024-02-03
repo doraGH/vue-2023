@@ -5,7 +5,7 @@ export default {
         <div class="modal-content border-0">
           <div class="modal-header bg-dark text-white">
             <h5 class="modal-title" id="exampleModalLabel">
-              <span>{{ tempProduct.title }}</span>
+              <span>{{ productItem.title }}</span>
             </h5>
             <button type="button" class="btn-close"
                     data-bs-dismiss="modal" aria-label="Close"></button>
@@ -13,20 +13,22 @@ export default {
           <div class="modal-body">
             <div class="row">
               <div class="col-sm-6">
-                <img class="img-fluid" :src="tempProduct.imageUrl" alt="">
+                <img class="img-fluid" :src="productItem.imageUrl" alt="">
               </div>
               <div class="col-sm-6">
-                <span class="badge bg-primary rounded-pill">{{ tempProduct.category }}</span>
-                <p>商品描述：{{ tempProduct.description }}</p>
-                <p>商品內容：{{ tempProduct.content }}</p>
-                <div class="h5">{{ tempProduct.price }} 元</div>
-                <del class="h6">原價 {{ tempProduct.origin_price }} 元</del>
-                <div class="h5">現在只要 {{ tempProduct.price }} 元</div>
+                <span class="badge bg-primary rounded-pill">{{ productItem.category }}</span>
+                <p>商品描述：{{ productItem.description }}</p>
+                <p>商品內容：{{ productItem.content }}</p>
+                <div class="h5">{{ productItem.price }} 元</div>
+                <del class="h6">原價 {{ productItem.origin_price }} 元</del>
+                <div class="h5">現在只要 {{ productItem.price }} 元</div>
                 <div>
                   <div class="input-group">
-                    <input type="number" class="form-control"
-                          min="1" v-model.number="qty">
-                    <button type="button" class="btn btn-primary" @click="addCart(tempProduct.id, qty)">加入購物車</button>
+                    <select class="form-select" aria-label="Default select example" v-model.number="qty">
+                      <option v-for="(item,key) in 20" :key="key" :value="item" >{{ item }}</option>
+                    </select>
+
+                    <button type="button" class="btn btn-primary" @click="addCart(productItem.id, qty)">加入購物車</button>
                   </div>
                 </div>
               </div>
@@ -37,7 +39,7 @@ export default {
       </div>
     </div>
   `,
-  props: ["tempProduct"],
+  props: ["productItem"],
   data() {
     return {
       bsModal: null,

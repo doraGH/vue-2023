@@ -1,5 +1,5 @@
-// import ProductStore from "../stores/ProductStore.js";
-// const { mapState } = Pinia;
+// import productStore from "../stores/productStore.js";
+// const { mapState, mapActions } = Pinia;
 
 export default {
   template: `
@@ -14,7 +14,7 @@ export default {
             <span>特價 {{ item.price }} 元</span>
           </p>
           <div class="btn-group btn-group-sm d-flex">
-            <button type="button" class="btn btn-outline-secondary" @click.prevent="getProduct(item.id)">
+            <button type="button" class="btn btn-outline-secondary" @click.prevent="getProductItem(item.id)">
               <i class="fas fa-spinner fa-pulse" v-if="status.loadItem"></i>
               查看更多
             </button>
@@ -31,8 +31,8 @@ export default {
   props: ["products", "status"],
   methods: {
     // 點擊呼叫單一產品 api
-    getProduct(productId) {
-      this.$emit("getProduct", productId);
+    getProductItem(productId) {
+      this.$emit("getProductItem", productId);
     },
     // 呼叫外部加入購物車 api
     addCart(productId) {
@@ -40,6 +40,12 @@ export default {
     },
   },
   // computed: {
-  //   ...mapState(ProductStore, ["getProductList"]),
+  //   ...mapState(productStore, ["products", "status"]),
+  // },
+  // methods: {
+  //   ...mapActions(productStore, ["getProducts"]),
+  // },
+  // mounted() {
+  //   this.getProducts();
   // },
 };

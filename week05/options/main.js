@@ -27,7 +27,7 @@ const app = createApp({
   data() {
     return {
       products: [],
-      tempProduct: {},
+      productItem: {},
       cartList: {},
 
       isLoading: false,
@@ -66,14 +66,13 @@ const app = createApp({
           const { products } = response.data;
           this.isLoading = false;
           this.products = products;
-          // console.log(this.products)
         })
         .catch((error) => {
           Swal.fire(error.data.message);
         });
     },
     // 取得單一產品，並且要開起modal
-    getProduct(id) {
+    getProductItem(id) {
       const url = `${apiUrl}/api/${apiPath}/product/${id}`;
       this.status.loadItem = true;
       axios
@@ -81,7 +80,7 @@ const app = createApp({
         .then((response) => {
           const { product } = response.data;
           this.status.loadItem = false;
-          this.tempProduct = product;
+          this.productItem = product;
           this.$refs.modal.openModal();
         })
         .catch((error) => {

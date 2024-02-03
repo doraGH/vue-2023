@@ -6,44 +6,49 @@ const apiPath = "dorayu";
 export default defineStore("ProductStore", {
   state: () => ({
     products: [],
-    tempProduct: {},
-    cartList: {},
+    productItem: {},
+    status: {
+      loadItem: false,
+      loadCart: false,
+    },
   }),
 
   actions: {
     // 取得所有產品
     getProducts() {
       const url = `${apiUrl}/api/${apiPath}/products`;
+      this.isLoading = true;
       axios
         .get(url)
         .then((response) => {
           const { products } = response.data;
+          this.isLoading = false;
           this.products = products;
-          // console.log(this.products)
         })
         .catch((error) => {
-          alert(error.data.message);
+          Swal.fire(error.data.message);
         });
     },
     // 取得單一產品，並且要開起modal
-    getProduct(id) {
+    getProductItem(id) {
       const url = `${apiUrl}/api/${apiPath}/product/${id}`;
+      this.status.loadItem = true;
       axios
         .get(url)
         .then((response) => {
-          // console.log(response);
           const { product } = response.data;
-          this.tempProduct = product;
+          this.status.loadItem = false;
+          this.productItem = product;
           this.$refs.modal.openModal();
         })
         .catch((error) => {
-          alert(error.data.message);
+          Swal.fire(error.data.message);
         });
     },
 
     // 匯出資料給外部使用
     getters: {
-      getProductList({ products }) {
+      products({ products }) {
         return products;
       },
     },
