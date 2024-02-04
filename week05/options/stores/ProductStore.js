@@ -3,7 +3,7 @@ const { defineStore } = Pinia;
 const apiUrl = "https://vue3-course-api.hexschool.io/v2";
 const apiPath = "dorayu";
 
-export default defineStore("ProductStore", {
+export default defineStore("productStore", {
   state: () => ({
     products: [],
     productItem: {},
@@ -45,12 +45,8 @@ export default defineStore("ProductStore", {
           Swal.fire(error.data.message);
         });
     },
-
-    // 匯出資料給外部使用
-    getters: {
-      products({ products }) {
-        return products;
-      },
-    },
   },
+
+  // 匯出資料給外部使用
+  getters: {},
 });

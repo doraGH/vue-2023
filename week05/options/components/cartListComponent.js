@@ -1,7 +1,10 @@
+import cartStore from "../stores/cartStore.js";
+const { mapState, mapActions } = Pinia;
+
 export default {
   template: `
   <div class="text-end">
-    <button class="btn btn-outline-danger" type="button" @click="deleteAllCarts">清空購物車</button>
+    <button class="btn btn-outline-danger" type="button" @click="fetchDeleteAllCarts">清空購物車</button>
   </div>
   <div v-if="cartList.carts && cartList.carts.length > 0" class="bg-light my-4 p-4">
     <table class="table align-middle">
@@ -17,7 +20,7 @@ export default {
       <tbody>
         <tr v-for="item in cartList.carts" :key="item.id">
           <td>            
-            <button type="button" class="btn btn-outline-danger btn-sm" @click="removeCartItem(item.id)">
+            <button type="button" class="btn btn-outline-danger btn-sm" @click="fetchRemoveCartItem(item.id)">
               <i class="fas fa-spinner fa-pulse" v-if="status.isChange"></i>
               x
             </button>
@@ -33,7 +36,7 @@ export default {
             <div class="input-group input-group-sm">
               <div class="input-group mb-3">
                 <input min="1" type="number" class="form-control" v-model.number="item.qty"
-                  @blur="updateCart(item)">
+                  @blur="fetchUpdateCart(item)">
                 <span class="input-group-text" id="basic-addon2">{{ item.product.unit }}</span>
               </div>
             </div>
@@ -58,17 +61,28 @@ export default {
   </div>
   <div v-else class="bg-light my-4 p-4">購物車沒有任何品項</div>
   `,
-  props: ["cartList", "status"],
-  emits: ["deleteAllCarts", "removeCartItem", "updateCart"],
+  // props: ["cartList", "status"],
+  // emits: ["deleteAllCarts", "removeCartItem", "updateCart"],
+
+  computed: {
+    ...mapState(cartStore, ["cartList", "status"]),
+  },
+
   methods: {
-    deleteAllCarts() {
-      this.$emit("deleteAllCarts");
+    ...mapActions(cartStore, [
+      "deleteAllCarts",
+      "removeCartItem",
+      "updateCart",
+    ]),
+
+    fetchDeleteAllCarts() {
+      this.deleteAllCarts();
     },
-    removeCartItem(cartId) {
-      this.$emit("removeCartItem", cartId);
+    fetchRemoveCartItem(cartId) {
+      this.removeCartItem(cartId);
     },
-    updateCart(item) {
-      this.$emit("updateCart", item);
+    fetchUpdateCart(item) {
+      this.updateCart(item);
     },
   },
 };

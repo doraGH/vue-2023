@@ -1,7 +1,3 @@
-import productStore from "../stores/productStore.js";
-import cartStore from "../stores/cartStore.js";
-const { mapState, mapActions } = Pinia;
-
 export default {
   template: `
     <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" ref="modal">
@@ -32,7 +28,7 @@ export default {
                       <option v-for="(item,key) in 20" :key="key" :value="item" >{{ item }}</option>
                     </select>
 
-                    <button type="button" class="btn btn-primary" @click="fetchAddCart(productItem.id, qty)">加入購物車</button>
+                    <button type="button" class="btn btn-primary" @click="addCart(productItem.id, qty)">加入購物車</button>
                   </div>
                 </div>
               </div>
@@ -43,10 +39,7 @@ export default {
       </div>
     </div>
   `,
-  // props: ["productItem"],
-  computed: {
-    ...mapState(productStore, ["productItem"]),
-  },
+  props: ["productItem", "addCart"],
   data() {
     return {
       bsModal: null,
@@ -60,8 +53,6 @@ export default {
     });
   },
   methods: {
-    ...mapActions(cartStore, ["addCart"]),
-
     openModal() {
       //打開modal
       this.qty = 1; // 重新設定 qty 為 1
@@ -72,8 +63,8 @@ export default {
       this.bsModal.hide();
     },
     // 呼叫外部加入購物車 api
-    fetchAddCart(productId, num) {
-      this.addCart(productId, num);
-    },
+    // addCart(productId, num) {
+    //   this.$emit("addCart", productId, num);
+    // },
   },
 };

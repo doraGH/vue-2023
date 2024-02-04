@@ -49,13 +49,28 @@
       <div class="container">
         <div class="mt-4">
           <!-- 產品Modal -->
-          <modal-component ref="modal"></modal-component>
+          <modal-component
+            ref="modal"
+            :product-item="productItem"
+            :add-cart="addCart"
+          ></modal-component>
 
           <!-- 產品列表 card-->
-          <product-component></product-component>
+          <product-component
+            :products="products"
+            :status="status"
+            :get-product-item="getProductItem"
+            :add-cart="addCart"
+          ></product-component>
 
           <!-- 購物車列表 -->
-          <cart-list-component></cart-list-component>
+          <cart-list-component
+            :cart-list="cartList"
+            :status="status"
+            :delete-all-carts="deleteAllCarts"
+            :remove-cart-item="removeCartItem"
+            :update-cart="updateCart"
+          ></cart-list-component>
         </div>
 
         <!-- 驗證表單 -->

@@ -1,5 +1,6 @@
-// import productStore from "../stores/productStore.js";
-// const { mapState, mapActions } = Pinia;
+import productStore from "../stores/productStore.js";
+import cartStore from "../stores/cartStore.js";
+const { mapState, mapActions } = Pinia;
 
 export default {
   template: `
@@ -14,11 +15,11 @@ export default {
             <span>特價 {{ item.price }} 元</span>
           </p>
           <div class="btn-group btn-group-sm d-flex">
-            <button type="button" class="btn btn-outline-secondary" @click.prevent="getProductItem(item.id)">
+            <button type="button" class="btn btn-outline-secondary" @click.prevent="fetchProductItem(item.id)">
               <i class="fas fa-spinner fa-pulse" v-if="status.loadItem"></i>
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger" @click.prevent="addCart(item.id)">
+            <button type="button" class="btn btn-outline-danger" @click.prevent="fetchAddCart(item.id)">
               <i class="fas fa-spinner fa-pulse" v-if="status.loadCart"></i>
               加到購物車
             </button>
@@ -28,24 +29,26 @@ export default {
     </div>
   </div>
   `,
-  props: ["products", "status"],
+  // props: ["products", "status"],
+  computed: {
+    ...mapState(productStore, ["products", "status"]),
+    ...mapState(cartStore, ["cartList", "status"]),
+  },
   methods: {
+    ...mapActions(productStore, ["getProducts", "getProductItem"]),
+    ...mapActions(cartStore, ["addCart", "getCarts"]),
+
     // 點擊呼叫單一產品 api
-    getProductItem(productId) {
-      this.$emit("getProductItem", productId);
+    fetchProductItem(productId) {
+      this.getProductItem(productId);
     },
     // 呼叫外部加入購物車 api
-    addCart(productId) {
-      this.$emit("addCart", productId);
+    fetchAddCart(productId) {
+      this.addCart(productId);
     },
   },
-  // computed: {
-  //   ...mapState(productStore, ["products", "status"]),
-  // },
-  // methods: {
-  //   ...mapActions(productStore, ["getProducts"]),
-  // },
-  // mounted() {
-  //   this.getProducts();
-  // },
+  mounted() {
+    this.getProducts();
+    this.getCarts();
+  },
 };
