@@ -46,7 +46,4 @@ export default defineStore("productStore", {
         });
     },
   },
-
-  // 匯出資料給外部使用
-  getters: {},
 });
