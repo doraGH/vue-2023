@@ -1,14 +1,13 @@
+import { apiUrl, apiPath } from "./config.js";
+
 const { createApp } = Vue;
 import pagination from "./components/pagination.js";
 import productModal from "./components/product-modal.js";
 import delProductModal from "./components/del-product-modal.js";
 
-
 const app = createApp({
   data() {
     return {
-      apiUrl: "https://vue3-course-api.hexschool.io/v2",
-      apiPath: "dorayu",
       products: [],
       pagination: {},
       tempProduct: {
@@ -35,9 +34,9 @@ const app = createApp({
     // 確認登入狀態
     checkLogin() {
       axios
-        .post(`${this.apiUrl}/api/user/check`)
+        .post(`${apiUrl}/api/user/check`)
         .then((response) => {
-          this.getPorducts();
+          this.getProducts();
         })
         .catch((error) => {
           Swal.fire(error.data.message);
@@ -45,14 +44,15 @@ const app = createApp({
         });
     },
     // 取得產品
-    getPorducts(page = 1) {
-      const url = `${this.apiUrl}/api/${this.apiPath}/admin/products?page=${page}`;
+    getProducts(page = 1) {
+      const url = `${apiUrl}/api/${apiPath}/admin/products?page=${page}`;
       axios
         .get(url)
         .then((response) => {
           const { products, pagination } = response.data;
           this.products = products;
           this.pagination = pagination;
+          // console.log(this.products);
         })
         .catch((error) => {
           Swal.fire(error.data.message);
@@ -86,17 +86,17 @@ const app = createApp({
     },
 
     // bsModal show
-    openProductModalShow(){
+    openProductModalShow() {
       this.$refs.productModal.openModal();
     },
-    openDelProductModalShow(){
+    openDelProductModalShow() {
       this.$refs.delProductModal.openModal();
     },
 
     // 登出
     logout() {
       axios
-        .post(`${this.apiUrl}/logout`)
+        .post(`${apiUrl}/logout`)
         .then((response) => {
           window.location = "login.html";
         })

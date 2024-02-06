@@ -1,3 +1,4 @@
+import { apiUrl, apiPath } from "../config.js";
 export default {
   template: `
   <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
@@ -29,8 +30,6 @@ export default {
   props: ["tempProduct"],
   data() {
     return {
-      apiUrl: "https://vue3-course-api.hexschool.io/v2",
-      apiPath: "dorayu",
       bsDelProductModal: null,
     };
   },
@@ -46,7 +45,7 @@ export default {
     deleteProduct() {
       axios
         .delete(
-          `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.data.id}`
+          `${apiUrl}/api/${apiPath}/admin/product/${this.tempProduct.data.id}`
         )
         .then((response) => {
           Swal.fire(response.data.message);
@@ -58,7 +57,7 @@ export default {
         });
     },
     // 打開modal
-    openModal(){
+    openModal() {
       this.bsDelProductModal.show();
     },
   },

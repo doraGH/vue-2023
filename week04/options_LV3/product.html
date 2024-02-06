@@ -15,9 +15,7 @@
   <div id="app">
     <div class="container">
       <div class="text-end mt-4">
-        <button class="btn btn-primary" 
-        @click="openProductModal('createNew')" 
-        @click="openProductModalShow">
+        <button class="btn btn-primary" @click="openProductModal('createNew')" @click="openProductModalShow">
           建立新的產品
         </button>
         <button type="button" class="btn btn-outline-primary m-2" @click="logout">
@@ -70,19 +68,16 @@
         </tbody>
       </table>
       <!-- pagination 分頁 -->
-      <pagination :pages="pagination" @change-page="getPorducts"></pagination>
+      <pagination :pages="pagination" @change-page="getProducts"></pagination>
     </div>
 
     <!-- Modal 新增修改視窗 -->
-    <product-modal ref="productModal" :is-new="isNew" :temp-product="tempProduct" 
-    @update-product="getPorducts"
-    @update-temp-product="handleUpdateTempProduct"
-    ></product-modal>
+    <product-modal ref="productModal" :is-new="isNew" :temp-product="tempProduct" @update-product="getProducts"
+      @update-temp-product="handleUpdateTempProduct"></product-modal>
 
     <!-- Modal 刪除彈跳視窗 -->
-    <del-product-modal ref="delProductModal" :temp-product="tempProduct" 
-    @update-product="getPorducts"
-    ></del-product-modal>
+    <del-product-modal ref="delProductModal" :temp-product="tempProduct"
+      @update-product="getProducts"></del-product-modal>
   </div>
 
 

@@ -1,3 +1,5 @@
+import { apiUrl, apiPath } from "../config.js";
+
 export default {
   template: `
   <div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
@@ -24,7 +26,7 @@ export default {
                   </div>
 
                   <h3 class="mb-3">多圖新增</h3>
-                  <div v-if="Array.isArray(tempProduct.data.imagesUrl)">
+                  <template v-if="Array.isArray(tempProduct.data.imagesUrl)">
                     <div class="mb-2" v-for="(image, key) in tempProduct.data.imagesUrl" :key="key">
                       <div class="mb-3">
                         <label for="imageUrl" class="form-label">輸入圖片網址</label>
@@ -46,13 +48,13 @@ export default {
                         刪除圖片
                       </button>
                     </div>
-                  </div>
-                  <div v-else>
+                  </template>
+                  <template v-else>
                     <button class="btn btn-outline-primary btn-sm d-block w-100"
                       @click="createImages">
                       新增圖片
                     </button>
-                  </div>
+                  </template>
                 </div>
                 <div class="col-sm-8">
                   <div class="mb-3">
@@ -68,7 +70,7 @@ export default {
                       v-model="tempProduct.data.category" placeholder="請輸入分類">
                     </div>
                     <div class="mb-3 col-md-6">
-                      <label for="price" class="form-label">單位</label>
+                      <label for="unit" class="form-label">單位</label>
                       <input id="unit" type="text" class="form-control" placeholder="請輸入單位"
                       v-model="tempProduct.data.unit">
                     </div>
@@ -86,8 +88,22 @@ export default {
                       v-model.number="tempProduct.data.price" placeholder="請輸入售價">
                     </div>
                   </div>
-                  <hr>
 
+                  <!-- 自定新增欄位 -->
+                  <div class="row">
+                    <div class="mb-3 col">
+                      <label for="cost_price" class="form-label">成本價</label>
+                      <input type="number" class="form-control" id="cost_price" placeholder="請輸入成本價"
+                        v-model.number="tempProduct.data.cost_price">
+                    </div>
+                    <div class="mb-3 col">
+                      <label for="inventory" class="form-label">庫存量</label>
+                      <input type="number" class="form-control" id="inventory" placeholder="請輸入庫存量"
+                        v-model.number="tempProduct.data.inventory">
+                    </div>
+                  </div>
+
+                  <hr>
                   <div class="mb-3">
                     <label for="description" class="form-label">產品描述</label>
                     <textarea id="description" type="text" class="form-control"
@@ -96,7 +112,7 @@ export default {
                   </div>
                   <div class="mb-3">
                     <label for="content" class="form-label">說明內容</label>
-                    <textarea id="description" type="text" class="form-control"
+                    <textarea id="content" type="text" class="form-control"
                     v-model="tempProduct.data.content" placeholder="請輸入說明內容">
                     </textarea>
                   </div>
@@ -125,8 +141,6 @@ export default {
   props: ["isNew", "tempProduct"],
   data() {
     return {
-      apiUrl: "https://vue3-course-api.hexschool.io/v2",
-      apiPath: "dorayu",
       bsProductModal: null,
     };
   },
@@ -145,12 +159,12 @@ export default {
     },
     // 更新產品資料
     updateProduct() {
-      let url = `${this.apiUrl}/api/${this.apiPath}/admin/product`;
+      let url = `${apiUrl}/api/${apiPath}/admin/product`;
       let http = "post";
 
       // 不是isNew則為新增
       if (!this.isNew) {
-        url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.data.id}`;
+        url = `${apiUrl}/api/${apiPath}/admin/product/${this.tempProduct.data.id}`;
         http = "put";
       }
 
@@ -161,7 +175,11 @@ export default {
           this.$emit("updateProduct");
         })
         .catch((error) => {
-          Swal.fire(error.data.message);
+          // console.log(error.data.message);
+          const errorMessage = Array.isArray(error.data.message)
+            ? error.data.message.join("\n")
+            : error.data.message;
+          Swal.fire(errorMessage);
         });
     },
     // 上傳圖片
@@ -173,7 +191,7 @@ export default {
       formData.append("file-to-upload", file); // 對應api 文件裡面表單的name, 並將檔案夾帶上去
 
       axios
-        .post(`${this.apiUrl}/api/${this.apiPath}/admin/upload`, formData)
+        .post(`${apiUrl}/api/${apiPath}/admin/upload`, formData)
         .then((response) => {
           // console.log(response.data.imageUrl);
 
@@ -188,9 +206,8 @@ export default {
     },
 
     // 打開modal
-    openModal(){
+    openModal() {
       this.bsProductModal.show();
     },
-
   },
 };
