@@ -7,14 +7,15 @@ export default defineStore("cartStore", {
   state: () => ({
     cartList: {},
     status: {
-      isChange: false,
+      loadCart: "",
+      isChange: "",
     },
   }),
   actions: {
     // 加入購物車
     addCart(id, qty = 1) {
       const url = `${apiUrl}/api/${apiPath}/cart`;
-      this.status.loadCart = true;
+      this.status.loadCart = id;
       const myCart = {
         data: {
           product_id: id,
@@ -24,8 +25,8 @@ export default defineStore("cartStore", {
       axios
         .post(url, myCart)
         .then((response) => {
-          this.$refs.modal.hideModal();
-          this.status.loadCart = false;
+          // this.$refs.modal.hideModal();
+          this.status.loadCart = "";
           this.getCarts();
           Swal.fire(response.data.message);
         })
@@ -49,12 +50,12 @@ export default defineStore("cartStore", {
     // 刪除單一購物車
     removeCartItem(cartId) {
       const url = `${apiUrl}/api/${apiPath}/cart/${cartId}`;
-      this.status.isChange = true;
+      this.status.isChange = cartId;
       axios
         .delete(url)
         .then((response) => {
-          alert(response.data.message);
-          this.status.isChange = false;
+          Swal.fire(response.data.message);
+          this.status.isChange = "";
           this.getCarts();
         })
         .catch((error) => {
@@ -83,12 +84,12 @@ export default defineStore("cartStore", {
           qty: data.qty,
         },
       };
-      this.status.isChange = true;
+      this.status.isChange = data.id;
       axios
         .put(url, cart)
         .then((response) => {
           Swal.fire(response.data.message);
-          this.status.isChange = false;
+          this.status.isChange = "";
           this.getCarts();
         })
         .catch((error) => {

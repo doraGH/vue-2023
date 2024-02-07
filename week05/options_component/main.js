@@ -159,12 +159,12 @@ const app = createApp({
           qty: data.qty,
         },
       };
-      this.status.isChange = true;
+      this.status.loadQty = data.id;
       axios
         .put(url, cart)
         .then((response) => {
           Swal.fire(response.data.message);
-          this.status.isChange = false;
+          this.status.loadQty = "";
           this.getCarts();
         })
         .catch((error) => {

@@ -21,16 +21,13 @@ export default {
         <tr v-for="item in cartList.carts" :key="item.id">
           <td>            
             <button type="button" class="btn btn-outline-danger btn-sm" @click="fetchRemoveCartItem(item.id)">
-              <i class="fas fa-spinner fa-pulse" v-if="status.isChange"></i>
+              <i class="fas fa-spinner fa-pulse" v-if="item.id === status.isChange"></i>
               x
             </button>
           </td>
           <td><img class="img-cart" :src="item.product.imageUrl" alt=""></td>
           <td>
             {{ item.product.title }}
-            <div class="text-success">
-              已套用優惠券
-            </div>
           </td>
           <td>
             <div class="input-group input-group-sm">
@@ -42,7 +39,6 @@ export default {
             </div>
           </td>
           <td class="text-end">
-            <small class="text-success">折扣價：</small>
             {{ item.final_total }}
           </td>
         </tr>

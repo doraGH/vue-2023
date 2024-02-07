@@ -32,7 +32,9 @@ export default {
                       <option v-for="(item,key) in 20" :key="key" :value="item" >{{ item }}</option>
                     </select>
 
-                    <button type="button" class="btn btn-primary" @click="fetchAddCart(productItem.id, qty)">加入購物車</button>
+                    <button type="button" class="btn btn-primary" 
+                    data-bs-dismiss="modal"
+                    @click="fetchAddCart(productItem.id, qty)">加入購物車</button>
                   </div>
                 </div>
               </div>

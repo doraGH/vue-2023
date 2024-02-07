@@ -15,12 +15,15 @@ export default {
             <span>特價 {{ item.price }} 元</span>
           </p>
           <div class="btn-group btn-group-sm d-flex">
-            <button type="button" class="btn btn-outline-secondary" @click.prevent="fetchProductItem(item.id)">
-              <i class="fas fa-spinner fa-pulse" v-if="status.loadItem"></i>
+            <button type="button" class="btn btn-outline-secondary" 
+            data-bs-toggle="modal" data-bs-target="#productModal"
+            @click.prevent="fetchProductItem(item.id)">
+              <i class="fas fa-spinner fa-pulse" v-if="item.id === status.loadItem"></i>
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger" @click.prevent="fetchAddCart(item.id)">
-              <i class="fas fa-spinner fa-pulse" v-if="status.loadCart"></i>
+            <button type="button" class="btn btn-outline-danger"
+            @click.prevent="fetchAddCart(item.id)">
+              <i class="fas fa-spinner fa-pulse" v-if="item.id === status.loadCart"></i>
               加到購物車
             </button>
           </div>
