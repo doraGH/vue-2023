@@ -53,6 +53,11 @@ const app = createApp({
   methods: {
     ...mapActions(cartStore, ["getCarts"]),
 
+    // 外部打開bsModal方法
+    openModal() {
+      this.$refs.modal.openModal();
+    },
+
     // 驗證手機
     isPhone(value) {
       const phoneNumber = /^(09)[0-9]{8}$/;
@@ -77,10 +82,6 @@ const app = createApp({
         });
     },
   },
-  // mounted() {
-  //   this.getProducts();
-  //   this.getCarts();
-  // },
 });
 
 app.component("loading", VueLoading.Component);

@@ -1,5 +1,7 @@
 const { defineStore } = Pinia;
 
+import loadingStore from "./loadingStore.js";
+
 const apiUrl = "https://vue3-course-api.hexschool.io/v2";
 const apiPath = "dorayu";
 
@@ -7,7 +9,6 @@ export default defineStore("productStore", {
   state: () => ({
     products: [],
     productItem: {},
-    isLoading: false,
     status: {
       loadItem: "",
     },
@@ -17,12 +18,13 @@ export default defineStore("productStore", {
     // 取得所有產品
     getProducts() {
       const url = `${apiUrl}/api/${apiPath}/products`;
-      this.isLoading = true;
+      const { toggleLoading } = loadingStore();
+      toggleLoading();
       axios
         .get(url)
         .then((response) => {
           const { products } = response.data;
-          this.isLoading = false;
+          toggleLoading();
           this.products = products;
         })
         .catch((error) => {

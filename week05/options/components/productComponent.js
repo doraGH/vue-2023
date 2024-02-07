@@ -43,6 +43,7 @@ export default {
 
     // 點擊呼叫單一產品 api
     fetchProductItem(productId) {
+      this.$emit("open-modal");
       this.getProductItem(productId);
     },
     // 呼叫外部加入購物車 api
