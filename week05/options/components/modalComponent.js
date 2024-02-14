@@ -78,4 +78,5 @@ export default {
       this.addCart(productId, num);
     },
   },
+  
 };
